@@ -1,31 +1,65 @@
 (ns concurrency-talk.core
-    (:require [reagent.core :as reagent :refer [atom]]))
+    (:require [goog.events :as events]
+              [reagent.core :as reagent :refer [atom]]))
 
 (enable-console-print!)
 
-(println "This text is printed from src/concurrency-talk/core.cljs. Go ahead and edit it and see reloading in action.")
+(defonce current-slide (atom 0))
 
-;; define your app data so that it doesn't get over-written on reload
+(defn next-slide [] (swap! current-slide inc))
+(defn previous-slide [] (swap! current-slide dec))
 
-(defonce app-state (atom {:current-slide 1}))
-
-(defn introduction [app]
-  [:div
-  [:h1 "Visualising Concurrency in Clojure"]
-  [:img.diagram {:src "ConcurrencyBegin.svg"}]
-  ])
+(def slide-deck
+  {:introduction
+   [:div
+    [:h1 "Visualising Concurrency in Clojure"]
+    [:h3 "replace example blue svg with clojure logos?"]
+    [:img.diagram {:src "ConcurrencyBegin.svg"}]]
+   :survey
+   [:div
+    [:h1 "Survey"]
+    [:h3 "Get a feel for how many people in the room know core.async and are familiar with concurrency"]
+    [:img.diagram {:src "ConcurrencyBegin.svg"}]]
+   :what-is
+   [:div
+    [:h1 "What is Concurrency?"]
+    [:h3 "Go over some brief definitions, talk about Tony Hoare's CSP paper if it's light enough"]
+    [:h3 "Concurrency is not parallelism by Rob Pike"]
+    [:img.diagram {:src "ConcurrencyBegin.svg"}]]
+   :building-blocks
+   [:div
+    [:h1 "Building Blocks"]
+    [:h3 "Then show the syntax / Lego bricks that clojurians can use to create something async"]
+    [:img.diagram {:src "ConcurrencyBegin.svg"}]]
+   :synchronous-toy
+   [:div
+    [:h1 "Synchronous Toy"]
+    [:h3 "Take a synchronous toy example and amend it to be asynchronous"]]
+   :visual-map
+   [:div
+    [:h1 "Visual Map"]
+    [:h3 "Produce a visual map of how each part interacts (using react/quil or SVG)"]]
+   :lispless
+   [:div
+    [:h1 "Asynchronous Go"]
+    [:h3 "Also produce an equivalent async toy program in go and laugh at it's inferior lispless syntax"]]})
 
 (defn interface [app]
   [:div
-  [:div.content [introduction]]
-  [:div.control [:a {:on-click #(println "next slide please!")} "Next Slide"]]])
+  [:div.content (nth (vals slide-deck) @current-slide)]
+  [:div.controls
+   [:a.control {:on-click previous-slide} "Previous Slide"]
+   [:a.control {:on-click next-slide} "Next Slide"]]])
+
+(defn- keydown [event]
+  (let [keycode (.-keyCode event)]
+    (comp
+      (cond (= 37 keycode) (previous-slide) ;; left
+            (= 39 keycode) (next-slide)) ;; right
+      (println (str "pressed key " keycode)))))
 
 (reagent/render-component
   [interface]
   (. js/document (getElementById "app")))
 
-;; Writing a macro
-;; defslide takes 3 args: name, target-div & body
-;; name should be a.. name - not a symbol/keyword e.g defslide intro not defslide :intro
-;; target-div is fine as a string
-;; body will be hiccup of the html to fill the target-div with
+(defonce initiate (events/listen js/document "keydown" keydown))

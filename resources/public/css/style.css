@@ -10,6 +10,11 @@ h1 {
   text-align: center;
 }
 
+h3 {
+  font-size: 24px;
+  text-align: center;
+}
+
 a {
   color: #f62d71;
 }
@@ -19,11 +24,22 @@ a:hover {
   text-decoration: underline;
 }
 
-.control {
+.loading {
+  padding-top: 25%;
+  font-size: 36px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.controls {
   position: absolute;
   bottom: 0;
   right: 0;
   padding: 15px;
+}
+
+.control {
+  padding-left: 10px;
 }
 
 .diagram {
