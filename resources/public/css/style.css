@@ -1,0 +1,26 @@
+/* some style */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+a {
+  color: #f62d71;
+}
+
+a:hover {
+  color: #6bb0ed;
+  text-decoration: underline;
+}
+
+.control {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 15px;
+}
