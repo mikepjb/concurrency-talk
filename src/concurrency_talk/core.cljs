@@ -10,7 +10,10 @@
 (defonce app-state (atom {:current-slide 1}))
 
 (defn introduction [app]
-  [:h1 "Visualising Concurrency in Clojure"])
+  [:div
+  [:h1 "Visualising Concurrency in Clojure"]
+  [:img.diagram {:src "ConcurrencyBegin.svg"}]
+  ])
 
 (defn interface [app]
   [:div
